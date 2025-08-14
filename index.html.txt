@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>رحلة عيد ميلاد 🎉</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      /* 🎨 ألوان قابلة للتعديل بسهولة */
+      --mint: #9ee7f5;          /* Mint Blue الأساسي */
+      --mint-strong:#6bd6ea;    /* درجة أقوى للهوفر */
+      --bg:#0f1b22;             /* خلفية داكنة أنيقة */
+      --card:#13242c;           /* بطاقات */
+      --text:#eaf7fb;           /* نص فاتح */
+      --muted:#a9c8d2;          /* نص خافت */
+      --accent1:#ffd166;        /* لمسات ليموني */
+      --accent2:#ff9ac2;        /* وردي باستيل */
+      --ok:#22c55e; --bad:#ef4444;
+      --radius:22px; --radius-sm:14px;
+      --shadow:0 22px 80px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:'Cairo', system-ui, -apple-system, Segoe UI, Roboto, Arial; background: radial-gradient(1000px 600px at 90% -10%, #15313a 0%, transparent 60%), radial-gradient(1200px 800px at -10% 110%, #17363f 0%, transparent 60%), var(--bg); color:var(--text)}
+    a{color:inherit}
+    .container{min-height:100svh;display:grid;place-items:center;padding:24px}
+    .card{width:min(980px,100%);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.10);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(10px);padding:24px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    h1{margin:0;font-size:clamp(26px,4.5vw,44px);letter-spacing:.5px}
+    .subtitle{color:var(--muted);margin-top:6px}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .badge{border:1px dashed rgba(255,255,255,.25);padding:6px 10px;border-radius:999px;color:var(--muted)}
+    .section{margin-top:16px}
+    .pane{background:var(--card);border:1px solid rgba(255,255,255,.10);border-radius:var(--radius);padding:20px}
+    label{display:block;margin-bottom:8px;color:var(--muted);font-weight:600}
+    input[type="text"], input[type="number"], textarea{width:100%;border:none;outline:none;background:#0c1b21;color:var(--text);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius-sm);padding:14px}
+    textarea{min-height:120px;resize:vertical}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    button{cursor:pointer;border:none;border-radius:var(--radius-sm);padding:12px 16px;font-weight:800}
+    .primary{background:var(--mint);color:#06232b}
+    .primary:hover{background:var(--mint-strong)}
+    .ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.25)}
+    .ghost:hover{border-color:rgba(255,255,255,.45)}
+    .center{text-align:center}
+
+    /* ✅ أقسام الرحلة */
+    .section-view{display:none}
+    .section-view.active{display:block}
+
+    /* 🚧 رسائل صغيرة */
+    .msg{padding:10px 12px;border-radius:12px;font-size:14px;margin-top:10px}
+    .msg.bad{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35)}
+    .msg.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35)}
+
+    /* 🎊 كونفيتي + بالونات */
+    #confetti{position:fixed;inset:0;pointer-events:none}
+    .balloon{position:fixed;bottom:-120px;width:34px;height:42px;border-radius:50% 50% 48% 52%;background:var(--mint);opacity:.93;animation:floatUp 9s linear forwards}
+    .balloon::after{content:"";position:absolute;bottom:-16px;left:50%;width:2px;height:18px;background:#fff;opacity:.7;transform:translateX(-50%)}
+    @keyframes floatUp{to{transform:translateY(-120vh) translateX(20px);opacity:.2}}
+
+    /* 📖 كتاب ثلاثي الأبعاد (CSS 3D) */
+    .book-wrap{display:grid;place-items:center}
+    .book{position:relative;width:min(820px,96vw);height:460px;perspective:1600px;}
+    .page{position:absolute;inset:0;background:#10242b;border:1px solid rgba(255,255,255,.12);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.35);transform-origin:left;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+    .page .inner{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px}
+    .page h3{margin:0 0 8px 0}
+    .book-controls{display:flex;justify-content:space-between;margin-top:12px}
+    .book-controls button{min-width:120px}
+    .page.is-flipped{transform:rotateY(-180deg)}
+    .spine{position:absolute;left:50%;top:12px;transform:translateX(-50%);width:8px;height:calc(100% - 24px);background:linear-gradient(90deg, #0f1f25, #0a171b);border-radius:8px}
+
+    /* 🃏 كروت الصور */
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+    .cardX{position:relative;aspect-ratio:3/4;perspective:1000px}
+    .cardX .face{position:absolute;inset:0;border-radius:16px;border:1px solid rgba(255,255,255,.12);backface-visibility:hidden;display:grid;place-items:center;padding:10px;text-align:center}
+    .cardX .front{background:#0c1b21}
+    .cardX .back{background:#112a31;transform:rotateY(180deg)}
+    .cardX.flip .front{transform:rotateY(180deg)}
+    .cardX.flip .back{transform:rotateY(360deg)}
+    .cardX img{width:100%;height:100%;object-fit:cover;border-radius:14px}
+
+    /* 🎁 صندوق الحظ */
+    .loot-wrap{display:grid;place-items:center;gap:14px}
+    .chest{width:220px;height:160px;border-radius:14px;background:linear-gradient(#855325,#5b3415);position:relative;box-shadow:inset 0 8px 0 rgba(0,0,0,.2),0 18px 60px rgba(0,0,0,.35);cursor:pointer}
+    .chest::before{content:"";position:absolute;inset:0;border-radius:14px;border:3px solid #d6a350;}
+    .lid{position:absolute;left:0;top:0;width:100%;height:60px;background:linear-gradient(#a56b30,#70451e);border-bottom:4px solid #d6a350;border-top-left-radius:14px;border-top-right-radius:14px;transform-origin:top;transition:transform .5s}
+    .lock{position:absolute;left:50%;top:62px;transform:translateX(-50%);width:36px;height:46px;background:#d6a350;border-radius:8px 8px 12px 12px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.2)}
+    .loot-item{min-height:42px;padding:10px 14px;border:1px dashed rgba(255,255,255,.25);border-radius:12px;background:#0f1f25}
+    .chest.open .lid{transform:rotateX(-72deg)}
+
+    /* 🔐 حقول الأسئلة */
+    .gate-input{display:grid;gap:10px;max-width:520px;margin-inline:auto}
+    .note{font-size:13px;color:var(--muted)}
+
+    /* 🔎 مودال رسائل محفوظة (inbox) */
+    dialog{border:none;border-radius:20px;max-width:min(820px,96vw);padding:0;box-shadow:0 20px 120px rgba(0,0,0,.5);} 
+    dialog::backdrop{background:rgba(0,0,0,.6)}
+    .modal{background:#0f1f25;color:#fff;border-radius:20px;overflow:hidden}
+    .modal header{padding:16px 20px;background:#0b171c;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center}
+    .modal .content{padding:18px 20px}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{border-bottom:1px solid rgba(255,255,255,.08);padding:10px;text-align:start}
+
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="container">
+    <div class="card">
+      <header>
+        <div>
+          <h1>رحلة عيد ميلاد <span id="displayName" style="color:var(--mint)">أدهم</span> 🎂</h1>
+          <div class="subtitle">كل مرحلة ليها طابعها — الألوان Mint Blue، وكل حاجة قابلة للتعديل 👇</div>
+        </div>
+        <div class="row">
+          <span class="badge">ملف واحد</span>
+          <span class="badge">بدون مكتبات</span>
+          <span class="badge">موبايل أولاً</span>
+        </div>
+      </header>
+
+      <!-- ✅ Section: Gate 1 -->
+      <section id="gate1" class="section section-view active">
+        <div class="pane center">
+          <h2>المرحلة 1 — سؤال الدخول</h2>
+          <p class="subtitle">لازم تجاوب صح عشان تكمل</p>
+          <div class="gate-input">
+            <label for="q1">السؤال: <strong>4??</strong></label>
+            <input id="q1" type="text" inputmode="numeric" placeholder="اكتب الإجابة هنا" aria-label="إجابة السؤال الأول">
+            <div class="btns">
+              <button class="primary" id="btnQ1">تأكيد</button>
+            </div>
+            <div id="q1Msg" class="msg bad" style="display:none">غلط… جرّب تاني 👀</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ✅ Section: Gate 2 -->
+      <section id="gate2" class="section section-view">
+        <div class="pane center">
+          <h2>المرحلة 2 — كلمة سر</h2>
+          <p class="subtitle">الإجابة بالعربي</p>
+          <div class="gate-input">
+            <label for="q2">السؤال: <strong>إيه اسم L؟ (الإجابة بالعربي)</strong></label>
+            <input id="q2" type="text" placeholder="مثال: لؤي" aria-label="إجابة السؤال الثاني">
+            <div class="btns">
+              <button class="primary" id="btnQ2">تأكيد</button>
+            </div>
+            <div id="q2Msg" class="msg bad" style="display:none">لسه مش مظبوط…</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ✅ Section: Gate 3 -->
+      <section id="gate3" class="section section-view">
+        <div class="pane center">
+          <h2>المرحلة 3 — سؤال التأكيد</h2>
+          <p class="subtitle">آخر خطوة قبل المفاجآت 🎉</p>
+          <div class="gate-input">
+            <label for="q3">السؤال: <strong>11??</strong></label>
+            <input id="q3" type="text" inputmode="numeric" placeholder="اكتب الإجابة هنا" aria-label="إجابة السؤال الثالث">
+            <div class="btns">
+              <button class="primary" id="btnQ3">ابدأ الاحتفال</button>
+            </div>
+            <div id="q3Msg" class="msg bad" style="display:none">إجابة غلط…</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 🎉 Celebration (auto after Gate 3) + intro to book -->
+      <section id="celebrate" class="section section-view">
+        <div class="pane center">
+          <h2>يلا نبدأ المفاجآت! 🥳</h2>
+          <p class="subtitle">خبطتين تنطيط… وبالونات في السما! بعد ثواني هتدخل على الكتاب الكيوت.</p>
+          <div class="btns center" style="justify-content:center">
+            <button class="ghost" id="skipToBook">دخول للكتاب الآن</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 📖 Book Section -->
+      <section id="book" class="section section-view">
+        <div class="pane">
+          <h2 class="center">الكتاب الكيوت 📖</h2>
+          <div class="book-wrap">
+            <div class="book" id="bookElem">
+              <div class="spine"></div>
+              <!-- الصفحات تتولد ديناميكياً من CONFIG.book.pages -->
+            </div>
+            <div class="book-controls">
+              <button class="ghost" id="prevPage">⟵ الصفحة السابقة</button>
+              <button class="primary" id="nextPage">الصفحة التالية ⟶</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 🃏 Cards Section -->
+      <section id="cards" class="section section-view">
+        <div class="pane">
+          <div class="row" style="justify-content:space-between">
+            <h2>كروت الصور</h2>
+            <div class="row">
+              <label class="badge" for="upload">رفعي صورك هنا (اختياري)</label>
+              <input id="upload" type="file" accept="image/*" multiple />
+            </div>
+          </div>
+          <p class="subtitle">اضغطي على أي كارت عشان يتقلب ويظهر ضهره المكتوب فيه كلامك 💌</p>
+          <div id="cardsWrap" class="cards" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- 🎁 Loot Box Section -->
+      <section id="loot" class="section section-view">
+        <div class="pane loot-wrap">
+          <h2>صندوق الحظ 🎁</h2>
+          <p class="subtitle">اضغطي على الصندوق… كل مرة حاجة مختلفة!</p>
+          <div class="chest" id="chest">
+            <div class="lid"></div>
+            <div class="lock"></div>
+          </div>
+          <div id="lootItem" class="loot-item center">— جاهز للمفاجآت —</div>
+          <div class="btns"><button id="again" class="primary">كمان مرة</button></div>
+        </div>
+      </section>
+
+      <footer class="section center" style="color:var(--muted);font-size:14px">
+        <div class="row" style="justify-content:center;gap:10px">
+          <span class="badge">لون أساسي: Mint Blue</span>
+          <span class="badge">اضغطي F8 لعرض صندوق الرسائل</span>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- 🔎 Inbox Modal -->
+  <dialog id="inbox">
+    <div class="modal">
+      <header>
+        <strong>الرسائل المحفوظة (محليًا)</strong>
+        <button id="closeInbox" class="ghost" style="padding:6px 10px">إغلاق</button>
+      </header>
+      <div class="content">
+        <table class="table" id="inboxTable">
+          <thead>
+            <tr><th>التاريخ</th><th>الرسالة</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="btns" style="margin-top:16px">
+          <button id="exportCsv" class="primary">تحميل كـ CSV</button>
+          <button id="clearInbox" class="ghost">مسح الكل (محلي)</button>
+        </div>
+        <p class="note" style="margin-top:8px">ملاحظة: الحفظ هنا محلي على جهازك مؤقتًا. هنبدله لاحقًا بـ Google Sheets عشان توصلك الرسائل أونلاين.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    // ===============================
+    // ⚙️ إعدادات قابلة للتعديل بسهولة
+    // ===============================
+    const CONFIG = {
+      name: 'أدهم',
+      gates: {
+        q1: { question:'4??', answer:'29' },
+        q2: { question:'إيه اسم L؟ (الإجابة بالعربي)', answer:'لؤي', normalize: true },
+        q3: { question:'11??', answer:'2' }
+      },
+      book: {
+        // محتوى الصفحات — عديلي براحتك
+        pages: [
+          {
+            title:'مرحبًا',
+            left: { html: '<h3>أهلاً بيك 👋</h3><p>دي أول صفحة في الكتاب الكيوت. تقدّر تقلّب الصفحات وشوف الباقي ✨</p>' },
+            right:{ html: '<img alt="balloons" src="https://images.unsplash.com/photo-1541280890142-c72565bf5f3f?q=80&w=800&auto=format&fit=crop" style="width:100%;height:100%;object-fit:cover;border-radius:12px">' }
+          },
+          {
+            title:'حكاية صغيرة',
+            left: { html: '<p>هنا تقدري تكتبي فقرة لطيفة، أو تضيفي صورة أو GIF — أي حاجة تحبيها.</p>' },
+            right:{ html: '<p>النصوص كلها قابلة للتعديل من CONFIG.book.pages</p>' }
+          },
+          {
+            title:'رسالة حرة',
+            left: { html: '<p>لو حابة تضيفي روابط أو سطور كتير… كله هنا.</p>' },
+            right:{ type:'messageBox' } // ← الصفحة اللي فيها بوكس الرسالة
+          },
+        ]
+      },
+      cards: {
+        // ضهر الكروت — اكتبي رسالتك القصيرة لكل كارت بنفس الترتيب
+        backs: [
+          'أول حاجة حبيت أقولها لك…',
+          'كلمة من القلب 💙',
+          'مفاجأة صغيرة ليك!',
+          'ذكريات حلوة بتكبر بينا',
+          'ضحكة النهاردة عليّ 😄'
+        ],
+        // لو ما ترفعتش صور، هنستخدم صور مكانية هنا (قابلة للتعديل)
+        placeholders: [
+          'https://images.unsplash.com/photo-1542156822-6924d1a71ace?q=80&w=800&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=800&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1606046604972-77cc76aee944?q=80&w=800&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=800&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=800&auto=format&fit=crop'
+        ]
+      },
+      loot: {
+        items: [
+          '🎟️ تذكرة عشا على ذوقي',
+          '🎧 بلاي ليست خاصة لك',
+          '📸 صورة نعملها دلوقتي',
+          '🍰 قطعة كيك إضافية',
+          '🎮 جولة لعبة أنا وأنت',
+          '🧩 لغز صغير وجايزته مفاجأة',
+          '💌 رسالة مطبوعة هوصلهالك'
+        ]
+      }
+    };
+    document.getElementById('displayName').textContent = CONFIG.name;
+
+    // ===============================
+    // 🔐 Gates Logic
+    // ===============================
+    const S = (id)=>document.getElementById(id);
+    const show = (id)=>{ document.querySelectorAll('.section-view').forEach(s=>s.classList.remove('active')); S(id).classList.add('active'); scrollTo({top:0,behavior:'smooth'}); };
+
+    S('btnQ1').onclick = ()=>{
+      const ok = (S('q1').value||'').trim() === CONFIG.gates.q1.answer;
+      S('q1Msg').style.display = ok? 'none':'block';
+      if(ok) show('gate2');
+    };
+
+    function normalizeArabic(str){
+      return str.replace(/[\u064B-\u065F]/g,'') // حركات
+                .replace(/[إأآا]/g,'ا')
+                .replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي')
+                .replace(/ة/g,'ه').trim();
+    }
+
+    S('btnQ2').onclick = ()=>{
+      let v = (S('q2').value||'').trim();
+      const ans = CONFIG.gates.q2.answer;
+      const ok = CONFIG.gates.q2.normalize
+        ? normalizeArabic(v) === normalizeArabic(ans)
+        : v === ans;
+      S('q2Msg').style.display = ok? 'none':'block';
+      if(ok) show('gate3');
+    };
+
+    S('btnQ3').onclick = ()=>{
+      const ok = (S('q3').value||'').trim() === CONFIG.gates.q3.answer;
+      S('q3Msg').style.display = ok? 'none':'block';
+      if(ok){
+        show('celebrate');
+        party();
+        setTimeout(()=>show('book'), 1800);
+      }
+    };
+
+    S('skipToBook').onclick = ()=> show('book');
+
+    // ===============================
+    // 🎊 Celebration (Confetti + Balloons)
+    // ===============================
+    const confetti = document.getElementById('confetti');
+    const ctx = confetti.getContext('2d');
+    function resize(){ confetti.width = innerWidth; confetti.height = innerHeight }
+    addEventListener('resize', resize); resize();
+    const pieces=[];
+    function Confetti(){ this.x=Math.random()*confetti.width; this.y=-10; this.size=6+Math.random()*8; this.speed=1+Math.random()*3; this.tilt=Math.random()*10; this.spin=Math.random()*.1 }
+    function confettiBurst(n=160){ for(let i=0;i<n;i++) pieces.push(new Confetti()); }
+    function draw(){ ctx.clearRect(0,0,confetti.width,confetti.height); for(let i=pieces.length-1;i>=0;i--){ const p=pieces[i]; p.y+=p.speed; p.tilt+=p.spin; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.tilt); ctx.fillStyle=`hsl(${(p.y/3)%360},90%,65%)`; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size); ctx.restore(); if(p.y>confetti.height+20) pieces.splice(i,1);} requestAnimationFrame(draw); } draw();
+    function spawnBalloons(n=8){ for(let i=0;i<n;i++){ const b=document.createElement('div'); b.className='balloon'; b.style.left=Math.random()*100+'vw'; b.style.animationDuration=(7+Math.random()*6)+'s'; b.style.background=`hsl(${Math.random()*360},80%,60%)`; document.body.appendChild(b); setTimeout(()=>b.remove(),12000); }}
+    function party(){ confettiBurst(260); spawnBalloons(12); }
+
+    // ===============================
+    // 📖 Book Builder
+    // ===============================
+    const bookEl = S('bookElem');
+    let currentPage = 0; // index للعرض فقط (مش صفحة ورق)
+
+    function buildBook(){
+      bookEl.innerHTML = '<div class="spine"></div>';
+      CONFIG.book.pages.forEach((p, i)=>{
+        const page = document.createElement('div');
+        page.className = 'page';
+        page.style.zIndex = (100 - i);
+        const inner = document.createElement('div');
+        inner.className = 'inner';
+        // left
+        const L = document.createElement('div');
+        if(p.left?.html){ L.innerHTML = p.left.html; }
+        // right
+        const R = document.createElement('div');
+        if(p.right?.html){ R.innerHTML = p.right.html; }
+        if(p.right?.type === 'messageBox'){
+          R.innerHTML = `
+            <label style="display:block;margin-bottom:8px">✨ اكتب أي حاجة وهتوصلي… أو ممكن تسيبها عادي 😊❤️</label>
+            <textarea id="freeMsg" placeholder="مساحتك الحرة للكتابة"></textarea>
+            <div class="btns"><button id="sendMsg" class="primary">إرسال</button></div>
+            <div id="sendStatus" class="note"></div>
+          `;
+        }
+        inner.append(L,R);
+        page.appendChild(inner);
+        bookEl.appendChild(page);
+      });
+      updateBookView();
+    }
+
+    function updateBookView(){
+      const pages = [...bookEl.querySelectorAll('.page')];
+      pages.forEach((pg, idx)=>{
+        pg.style.transform = idx <= currentPage ? 'rotateY(-180deg)' : 'rotateY(0)';
+      });
+    }
+
+    S('prevPage').onclick = ()=>{ if(currentPage>0){ currentPage--; updateBookView(); } else { show('cards'); }};
+    S('nextPage').onclick = ()=>{ if(currentPage < CONFIG.book.pages.length-1){ currentPage++; updateBookView(); } else { show('cards'); }};
+
+    buildBook();
+
+    // ===============================
+    // 💌 Messages storage (محلي مؤقتًا)
+    // ===============================
+    const LS_KEY = 'birthday_messages_v1';
+    function getMsgs(){ try{ return JSON.parse(localStorage.getItem(LS_KEY))||[] }catch{ return [] } }
+    function setMsgs(arr){ localStorage.setItem(LS_KEY, JSON.stringify(arr)); }
+
+    document.addEventListener('click', (e)=>{
+      if(e.target && e.target.id==='sendMsg'){
+        const ta = S('freeMsg');
+        const text = (ta?.value||'').trim();
+        if(!text){ S('sendStatus').textContent = 'تم — مفيش رسالة، نكمل عادي.'; S('sendStatus').style.color = 'var(--muted)'; showToast('مفيش رسالة — تمام'); return; }
+        const arr = getMsgs();
+        arr.push({when:new Date().toLocaleString('ar-EG'), text});
+        setMsgs(arr);
+        ta.value='';
+        S('sendStatus').textContent = 'اتسجلت بنجاح 💾';
+        S('sendStatus').style.color = 'var(--mint)';
+        showToast('اتسجلت رسالتك');
+      }
+    });
+
+    // فتح الإنبوكس بمفتاح F8
+    addEventListener('keydown', (e)=>{ if(e.key==='F8'){ openInbox(); }});
+
+    function openInbox(){
+      const tbody = S('inboxTable').querySelector('tbody');
+      tbody.innerHTML='';
+      getMsgs().forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${r.when}</td><td>${escapeHtml(r.text)}</td>`;
+        tbody.appendChild(tr);
+      });
+      S('inbox').showModal();
+    }
+    S('closeInbox').onclick = ()=> S('inbox').close();
+
+    S('exportCsv').onclick = ()=>{
+      const rows = [["التاريخ","الرسالة"], ...getMsgs().map(r=>[r.when, r.text.replace(/\n/g,' ')])];
+      const csv = rows.map(r=>r.map(cell=>`"${cell.replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob(["\uFEFF"+csv], {type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'messages.csv'; a.click();
+    };
+
+    S('clearInbox').onclick = ()=>{ if(confirm('مسح كل الرسائل المحلية؟')){ localStorage.removeItem(LS_KEY); openInbox(); }}
+
+    // ===============================
+    // 🃏 Cards Builder
+    // ===============================
+    const cardsWrap = S('cardsWrap');
+
+    function buildCards(images){
+      cardsWrap.innerHTML='';
+      const imgs = images?.length ? images : CONFIG.cards.placeholders;
+      const backs = CONFIG.cards.backs;
+      imgs.forEach((src,i)=>{
+        const div = document.createElement('div');
+        div.className = 'cardX';
+        div.innerHTML = `
+          <div class="face front">${ src.startsWith('data:') || src.startsWith('http') ? `<img src="${src}" alt="card-${i}">` : `<div>${escapeHtml(src)}</div>` }</div>
+          <div class="face back"><div>${escapeHtml(backs[i%backs.length]||'—')}</div></div>
+        `;
+        div.addEventListener('click', ()=> div.classList.toggle('flip'));
+        cardsWrap.appendChild(div);
+      });
+    }
+
+    // رفع صور من الجهاز
+    S('upload').addEventListener('change', (e)=>{
+      const files = [...e.target.files];
+      if(!files.length){ buildCards(); return; }
+      const readers = files.map(f=> new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(f); }));
+      Promise.all(readers).then(dataUrls=> buildCards(dataUrls));
+    });
+
+    buildCards();
+
+    // ===============================
+    // 🎁 Loot Box
+    // ===============================
+    const chest = S('chest');
+    const lootItem = S('lootItem');
+    function openChest(){
+      chest.classList.add('open');
+      const item = CONFIG.loot.items[Math.floor(Math.random()*CONFIG.loot.items.length)];
+      lootItem.textContent = item;
+      party();
+      setTimeout(()=> chest.classList.remove('open'), 900);
+    }
+    chest.addEventListener('click', openChest);
+    S('again').addEventListener('click', openChest);
+
+    // ===============================
+    // 🧩 Utilities
+    // ===============================
+    function escapeHtml(str=''){ return str.replace(/[&<>"]+/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[s]||s)); }
+    function showToast(txt){
+      const t = document.createElement('div');
+      t.textContent = txt;
+      t.style.position='fixed'; t.style.insetInline='0'; t.style.bottom='24px'; t.style.margin='0 auto';
+      t.style.background='rgba(0,0,0,.6)'; t.style.color='white'; t.style.padding='10px 16px'; t.style.borderRadius='12px'; t.style.width='fit-content'; t.style.boxShadow='0 10px 30px rgba(0,0,0,.4)';
+      document.body.appendChild(t); setTimeout(()=>t.remove(), 1600);
+    }
+
+    // ===============================
+    // 🔗 تنقل تلقائي بين الأقسام عند الانتهاء
+    // بعد الكروت → صندوق الحظ
+    const observer = new MutationObserver(()=>{
+      if(S('cards').classList.contains('active')){
+        // بعد 30 ثانية من اللعب ينتقل لصندوق الحظ 
+        setTimeout(()=>{ if(S('cards').classList.contains('active')) show('loot'); }, 30000);
+      }
+    });
+    observer.observe(document.body, {attributes:true, subtree:true, attributeFilter:['class']});
+
+    // فتح الإنبوكس لو الرابط فيه #inbox
+    if(location.hash === '#inbox'){ openInbox(); }
+  </script>
+</body>
+</html>
